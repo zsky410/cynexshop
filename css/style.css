@@ -296,6 +296,9 @@ header .container {
   height: 200px;
   overflow: hidden;
   position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .placeholder {
