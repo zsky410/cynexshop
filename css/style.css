@@ -126,6 +126,75 @@ header .container {
   font-size: 24px;
 }
 
+/* Banner Grid */
+.banner-grid {
+  width: 100%;
+  margin: 80px auto 40px;
+  padding: 0 15px;
+}
+
+.banner-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 15px;
+}
+
+.main-banner {
+  flex: 2;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.main-banner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(5, 117, 230, 0.25);
+}
+
+.side-banners {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.side-banner {
+  height: 192.5px; /* Half of main banner height minus half the gap */
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.side-banner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(5, 117, 230, 0.25);
+}
+
+.main-banner a,
+.side-banner a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.main-banner img,
+.side-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.main-banner:hover img,
+.side-banner:hover img {
+  transform: scale(1.02);
+}
+
 /* Banner Styles */
 .banner {
   height: 70vh;
@@ -272,8 +341,13 @@ header .container {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 30px;
+}
+
+.product-card a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .product-card {
@@ -284,6 +358,7 @@ header .container {
   border: 1px solid var(--card-border);
   backdrop-filter: blur(5px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .product-card:hover {
@@ -296,27 +371,83 @@ header .container {
   height: 200px;
   overflow: hidden;
   position: relative;
-  display: block;
+  display: flex;
   text-decoration: none;
   color: inherit;
+  align-items: center;
 }
 
-.placeholder {
-  width: 100%;
-  height: 100%;
+.product-image .product-logo {
+  height: 80px;
+  width: 80px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.product-image .product-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+/* Ẩn phần logo sản phẩm */
+.product-logo {
+  display: none;
+}
+
+.product-card:nth-child(4n + 1) .product-logo {
   background: linear-gradient(
     135deg,
-    rgba(5, 117, 230, 0.3),
-    rgba(107, 37, 251, 0.3)
+    rgba(246, 79, 89, 0.8),
+    rgba(196, 29, 39, 0.8)
   );
-  color: white;
+}
+
+.product-card:nth-child(4n + 2) .product-logo {
+  background: linear-gradient(
+    135deg,
+    rgba(111, 30, 176, 0.8),
+    rgba(71, 0, 136, 0.8)
+  );
+}
+
+.product-card:nth-child(4n + 3) .product-logo {
+  background: linear-gradient(
+    135deg,
+    rgba(22, 124, 217, 0.8),
+    rgba(2, 84, 167, 0.8)
+  );
+}
+
+.product-card:nth-child(4n + 4) .product-logo {
+  background: linear-gradient(
+    135deg,
+    rgba(8, 153, 129, 0.8),
+    rgba(0, 103, 79, 0.8)
+  );
+}
+
+.product-duration {
+  display: none; /* Ẩn mốc thời gian */
+}
+
+.product-category {
+  font-size: 12px;
+  color: #4e83fd;
   font-weight: 600;
-  font-size: 18px;
-  text-align: center;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .product-info {
@@ -325,60 +456,46 @@ header .container {
 
 .product-info h3 {
   font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.price {
-  font-weight: 700;
-  color: #bfcfff;
   margin-bottom: 15px;
+  min-height: 40px;
 }
 
-.product-actions {
+.product-pricing {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
-.buy-button {
-  background: linear-gradient(
-    45deg,
-    var(--accent-color-1),
-    var(--accent-color-2)
-  );
+.current-price {
+  font-size: 18px;
+  font-weight: 700;
   color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  flex-grow: 1;
   margin-right: 10px;
 }
 
-.buy-button:hover {
-  box-shadow: var(--neon-shadow);
+.original-price {
+  font-size: 14px;
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.cart-button {
-  background: rgba(89, 118, 255, 0.1);
+.discount-percent {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e63946;
   color: white;
-  border: 1px solid rgba(89, 118, 255, 0.3);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: var(--transition);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.cart-button:hover {
-  background: rgba(89, 118, 255, 0.2);
-  border-color: rgba(89, 118, 255, 0.5);
-  box-shadow: var(--neon-shadow);
+.product-actions {
+  display: none;
 }
 
 /* Footer Styles */
@@ -419,6 +536,18 @@ footer {
   .banner h1 {
     font-size: 36px;
   }
+
+  .banner-grid {
+    margin-top: 70px;
+  }
+
+  .main-banner {
+    height: 350px;
+  }
+
+  .side-banner {
+    height: 167.5px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -431,8 +560,30 @@ footer {
   }
 
   .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .banner-container {
+    flex-direction: column;
+  }
+
+  .main-banner {
+    flex: none;
+    height: 300px;
+  }
+
+  .side-banners {
+    flex: none;
+    flex-direction: row;
+  }
+
+  .side-banner {
+    flex: 1;
+    height: 150px;
+  }
+
+  .banner-grid {
+    margin-top: 60px;
   }
 }
 
@@ -446,12 +597,31 @@ footer {
   }
 
   .product-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .cta-button {
     padding: 12px 24px;
+  }
+
+  .side-banners {
+    flex-direction: column;
+  }
+
+  .main-banner {
+    height: 200px;
+  }
+
+  .side-banner {
+    height: 120px;
+  }
+
+  .banner-grid {
+    margin-top: 60px;
+  }
+
+  .product-image {
+    height: 180px;
   }
 }
 
@@ -459,4 +629,63 @@ footer {
   .product-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Product Card Enhancement */
+.product-card .product-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.product-card:nth-child(4n + 1) .placeholder {
+  background-color: rgba(246, 79, 89, 0.1);
+}
+
+.product-card:nth-child(4n + 2) .placeholder {
+  background-color: rgba(111, 30, 176, 0.1);
+}
+
+.product-card:nth-child(4n + 3) .placeholder {
+  background-color: rgba(22, 124, 217, 0.1);
+}
+
+.product-card:nth-child(4n + 4) .placeholder {
+  background-color: rgba(8, 153, 129, 0.1);
+}
+
+.product-duration {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 30px;
+  background: linear-gradient(45deg, #3b7ffc, #6025f5);
+  color: white;
+}
+
+/* Điều chỉnh placeholder khi không có logo */
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(5, 117, 230, 0.1),
+    rgba(107, 37, 251, 0.1)
+  );
+  color: white;
+  font-weight: 600;
+  font-size: 28px;
+  text-align: left;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }

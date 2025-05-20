@@ -3,9 +3,51 @@ document.addEventListener('DOMContentLoaded', function () {
   const menuToggle = document.querySelector('.menu-toggle');
   const menu = document.querySelector('.menu');
 
-  if (menuToggle && menu) {
+  if (menuToggle) {
     menuToggle.addEventListener('click', function () {
       menu.classList.toggle('active');
+      menuToggle.classList.toggle('active');
+    });
+  }
+
+  // Product quantity buttons in product details page
+  const minusBtn = document.querySelector('.qty-btn.minus');
+  const plusBtn = document.querySelector('.qty-btn.plus');
+  const qtyInput = document.querySelector('.qty-input');
+
+  if (minusBtn && plusBtn && qtyInput) {
+    minusBtn.addEventListener('click', function () {
+      let currentValue = parseInt(qtyInput.value);
+      if (currentValue > 1) {
+        qtyInput.value = currentValue - 1;
+      }
+    });
+
+    plusBtn.addEventListener('click', function () {
+      let currentValue = parseInt(qtyInput.value);
+      let maxValue = parseInt(qtyInput.getAttribute('max') || '99');
+      if (currentValue < maxValue) {
+        qtyInput.value = currentValue + 1;
+      }
+    });
+  }
+
+  // Product detail page tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  if (tabBtns.length && tabContents.length) {
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', function () {
+        // Remove active class from all tabs
+        tabBtns.forEach((b) => b.classList.remove('active'));
+        tabContents.forEach((c) => c.classList.remove('active'));
+
+        // Add active class to current tab
+        this.classList.add('active');
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
     });
   }
 

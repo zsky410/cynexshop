@@ -161,9 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
   createAmbientBackground();
 
   function createAmbientBackground() {
-    const container = document.querySelector('.auth-container');
-    if (!container) return;
-
     // Create canvas for ambient background
     const canvas = document.createElement('canvas');
     canvas.className = 'ambient-background';
