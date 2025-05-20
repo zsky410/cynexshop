@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giỏ hàng - CYNEX</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/cart.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <a href="index.html">CYNEX</a>
+        </div>
+        <nav>
+          <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="guide.html">Hướng dẫn mua hàng</a></li>
+            <li><a href="login.html">Đăng nhập</a></li>
+            <li><a href="register.html">Đăng ký</a></li>
+            <li>
+              <a href="cart.html" class="cart-icon active"
+                ><i class="fas fa-shopping-cart"></i
+              ></a>
+            </li>
+          </ul>
+        </nav>
+        <div class="menu-toggle">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="cart-container">
+      <div class="container">
+        <h1 class="cart-title">Giỏ hàng của bạn</h1>
+
+        <div class="cart-content">
+          <div class="cart-items">
+            <div class="cart-item">
+              <div class="item-image">
+                <div class="placeholder">Adobe Creative Cloud</div>
+              </div>
+              <div class="item-details">
+                <h3>Adobe Creative Cloud</h3>
+                <p class="item-type">Gói thuê bao 1 năm</p>
+              </div>
+              <div class="item-quantity">
+                <button class="quantity-btn quantity-decrease">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <input type="number" value="1" min="1" class="quantity-input" />
+                <button class="quantity-btn quantity-increase">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <div class="item-price">2,500,000 đ</div>
+              <div class="item-actions">
+                <button class="remove-btn">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="cart-item">
+              <div class="item-image">
+                <div class="placeholder">Spotify Premium</div>
+              </div>
+              <div class="item-details">
+                <h3>Spotify Premium</h3>
+                <p class="item-type">Gói cá nhân 6 tháng</p>
+              </div>
+              <div class="item-quantity">
+                <button class="quantity-btn quantity-decrease">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <input type="number" value="1" min="1" class="quantity-input" />
+                <button class="quantity-btn quantity-increase">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <div class="item-price">190,000 đ</div>
+              <div class="item-actions">
+                <button class="remove-btn">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="cart-item">
+              <div class="item-image">
+                <div class="placeholder">ChatGPT Plus</div>
+              </div>
+              <div class="item-details">
+                <h3>ChatGPT Plus</h3>
+                <p class="item-type">Gói thuê bao 3 tháng</p>
+              </div>
+              <div class="item-quantity">
+                <button class="quantity-btn quantity-decrease">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <input type="number" value="1" min="1" class="quantity-input" />
+                <button class="quantity-btn quantity-increase">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <div class="item-price">480,000 đ</div>
+              <div class="item-actions">
+                <button class="remove-btn">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cart-sidebar">
+            <div class="cart-summary">
+              <h2>Tổng giỏ hàng</h2>
+
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span>3,170,000 đ</span>
+              </div>
+
+              <div class="summary-row">
+                <span>Thuế (10%)</span>
+                <span>317,000 đ</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-row total">
+                <span>Tổng cộng</span>
+                <span>3,487,000 đ</span>
+              </div>
+
+              <button class="checkout-button">
+                <span>Thanh toán ngay</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+
+              <button class="continue-shopping">
+                <i class="fas fa-arrow-left"></i>
+                <span>Tiếp tục mua hàng</span>
+              </button>
+            </div>
+
+            <div class="promo-code">
+              <h3>Mã giảm giá</h3>
+              <div class="promo-input">
+                <input type="text" placeholder="Nhập mã giảm giá" />
+                <button class="apply-btn">Áp dụng</button>
+              </div>
+            </div>
+
+            <div class="payment-methods">
+              <h3>Chấp nhận thanh toán</h3>
+              <div class="payment-icons">
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-paypal"></i>
+                <i class="fab fa-cc-amex"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-cart" style="display: none">
+          <div class="empty-cart-content">
+            <i class="fas fa-shopping-cart"></i>
+            <h2>Giỏ hàng của bạn đang trống</h2>
+            <p>Hãy thêm sản phẩm vào giỏ hàng để tiến hành thanh toán</p>
+            <a href="index.html" class="browse-btn">Tiếp tục mua sắm</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>© 2025 - CYNEX. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/cart.js"></script>
+  </body>
+</html>

@@ -1,0 +1,459 @@
+:root {
+  --background-color: #070b14;
+  --background-gradient: linear-gradient(135deg, #080e1f, #05051f);
+  --text-color: #e0e6ff;
+  --accent-color-1: #0575e6;
+  --accent-color-2: #6b25fb;
+  --accent-color-3: #00f260;
+  --card-bg: rgba(13, 21, 43, 0.7);
+  --card-border: rgba(89, 118, 255, 0.2);
+  --header-bg: rgba(7, 16, 35, 0.85);
+  --neon-shadow: 0 0 10px rgba(89, 118, 255, 0.5),
+    0 0 20px rgba(89, 118, 255, 0.3);
+  --neon-glow: 0 0 5px rgba(89, 118, 255, 0.5);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background: var(--background-gradient);
+  color: var(--text-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Header Styles */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(89, 118, 255, 0.1);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  font-family: "Orbitron", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-color);
+  text-decoration: none;
+  background: linear-gradient(
+    to right,
+    var(--accent-color-1),
+    var(--accent-color-2)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: var(--neon-glow);
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+}
+
+.menu li {
+  margin-left: 30px;
+}
+
+.menu a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: var(--transition);
+  position: relative;
+  padding: 5px 0;
+}
+
+.menu a:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--accent-color-1),
+    var(--accent-color-2)
+  );
+  transition: var(--transition);
+}
+
+.menu a:hover:before,
+.menu a.active:before {
+  width: 100%;
+}
+
+.menu a:hover,
+.menu a.active {
+  text-shadow: 0 0 10px rgba(89, 118, 255, 0.8);
+}
+
+.cart-icon i {
+  position: relative;
+  font-size: 18px;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+/* Banner Styles */
+.banner {
+  height: 70vh;
+  min-height: 500px;
+  background: linear-gradient(
+      135deg,
+      rgba(11, 23, 47, 0.9),
+      rgba(7, 10, 35, 0.85)
+    ),
+    url("../img/banner-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 30%,
+    var(--background-color)
+  );
+  z-index: 1;
+}
+
+.banner-content {
+  text-align: center;
+  max-width: 800px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.banner h1 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 48px;
+  margin-bottom: 20px;
+  background: linear-gradient(
+    to right,
+    var(--text-color),
+    var(--accent-color-1)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: var(--neon-glow);
+}
+
+.banner p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  background: linear-gradient(
+    45deg,
+    var(--accent-color-1),
+    var(--accent-color-2)
+  );
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--neon-shadow);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 15px rgba(5, 117, 230, 0.3);
+}
+
+.cta-button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: var(--transition);
+}
+
+.cta-button:hover:before {
+  left: 100%;
+}
+
+/* Products Section Styles */
+.products {
+  padding: 70px 0;
+}
+
+.section-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 36px;
+  margin-bottom: 40px;
+  text-align: center;
+  background: linear-gradient(
+    to right,
+    var(--text-color),
+    var(--accent-color-1)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.section-title:after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    var(--accent-color-1),
+    var(--accent-color-2)
+  );
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: var(--transition);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--neon-shadow);
+  border-color: rgba(89, 118, 255, 0.4);
+}
+
+.product-image {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(5, 117, 230, 0.3),
+    rgba(107, 37, 251, 0.3)
+  );
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: center;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.product-info h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-weight: 700;
+  color: #bfcfff;
+  margin-bottom: 15px;
+}
+
+.product-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buy-button {
+  background: linear-gradient(
+    45deg,
+    var(--accent-color-1),
+    var(--accent-color-2)
+  );
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.buy-button:hover {
+  box-shadow: var(--neon-shadow);
+}
+
+.cart-button {
+  background: rgba(89, 118, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(89, 118, 255, 0.3);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cart-button:hover {
+  background: rgba(89, 118, 255, 0.2);
+  border-color: rgba(89, 118, 255, 0.5);
+  box-shadow: var(--neon-shadow);
+}
+
+/* Footer Styles */
+footer {
+  padding: 30px 0;
+  background: rgba(7, 16, 35, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(89, 118, 255, 0.1);
+  text-align: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .menu {
+    position: fixed;
+    top: 70px;
+    right: -100%;
+    flex-direction: column;
+    background: var(--header-bg);
+    width: 250px;
+    height: calc(100vh - 70px);
+    padding: 20px;
+    transition: var(--transition);
+  }
+
+  .menu.active {
+    right: 0;
+  }
+
+  .menu li {
+    margin: 15px 0;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .banner h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner {
+    height: 60vh;
+  }
+
+  .banner h1 {
+    font-size: 32px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner {
+    height: 50vh;
+  }
+
+  .banner h1 {
+    font-size: 28px;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+
+  .cta-button {
+    padding: 12px 24px;
+  }
+}
+
+@media (max-width: 375px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
