@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Firebase Connection</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #0d152b;
+        color: white;
+      }
+      .result {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .success {
+        background: rgba(40, 167, 69, 0.2);
+        border: 1px solid rgba(40, 167, 69, 0.3);
+      }
+      .error {
+        background: rgba(220, 53, 69, 0.2);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+      button {
+        background: linear-gradient(135deg, #5976ff, #3a3af1);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Test Firebase Connection</h1>
+
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="testAddProduct()">Test Add Product</button>
+    <button onclick="testReadProducts()">Test Read Products</button>
+
+    <div id="results"></div>
+
+    <script type="module">
+      import { db } from "./js/firebase-config.js";
+      import {
+        collection,
+        addDoc,
+        getDocs,
+        query,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+      function addResult(message, type = "success") {
+        const results = document.getElementById("results");
+        const div = document.createElement("div");
+        div.className = `result ${type}`;
+        div.textContent = message;
+        results.appendChild(div);
+        console.log(message);
+      }
+
+      window.testConnection = async function () {
+        try {
+          addResult("Testing Firebase connection...", "success");
+          console.log("Firebase db object:", db);
+          addResult("Firebase connection successful!", "success");
+        } catch (error) {
+          addResult(`Connection failed: ${error.message}`, "error");
+          console.error("Connection error:", error);
+        }
+      };
+
+      window.testAddProduct = async function () {
+        try {
+          addResult("Testing add product...", "success");
+
+          const testProduct = {
+            name: "Test Product " + Date.now(),
+            description: "This is a test product",
+            imageUrl: "",
+            pricing: {
+              basic: {
+                "1 tháng": { price: 50000, oldPrice: 100000 },
+              },
+            },
+            active: true,
+            createdAt: new Date(),
+          };
+
+          const docRef = await addDoc(collection(db, "products"), testProduct);
+          addResult(
+            `Product added successfully with ID: ${docRef.id}`,
+            "success"
+          );
+        } catch (error) {
+          addResult(`Add product failed: ${error.message}`, "error");
+          console.error("Add product error:", error);
+        }
+      };
+
+      window.testReadProducts = async function () {
+        try {
+          addResult("Testing read products...", "success");
+
+          const productsRef = collection(db, "products");
+          const q = query(productsRef, orderBy("name"));
+          const querySnapshot = await getDocs(q);
+
+          addResult(`Found ${querySnapshot.size} products`, "success");
+
+          querySnapshot.forEach((doc) => {
+            const product = doc.data();
+            addResult(`Product: ${product.name} (ID: ${doc.id})`, "success");
+          });
+        } catch (error) {
+          addResult(`Read products failed: ${error.message}`, "error");
+          console.error("Read products error:", error);
+        }
+      };
+
+      // Test connection on page load
+      window.addEventListener("load", () => {
+        testConnection();
+      });
+    </script>
+  </body>
+</html>

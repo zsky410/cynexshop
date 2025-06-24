@@ -1,3 +1,31 @@
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCjMD1puDZnEt45xIGRXO2BGHmsDMZxK1g",
+  authDomain: "cynexshop-cacef.firebaseapp.com",
+  projectId: "cynexshop-cacef",
+  storageBucket: "cynexshop-cacef.appspot.com",
+  messagingSenderId: "16356634788",
+  appId: "1:16356634788:web:ef7e77a9bb84ba66b43631",
+  measurementId: "G-J36RRJQ27L"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
 document.addEventListener('DOMContentLoaded', function () {
   // Mobile menu toggle
   const menuToggle = document.querySelector('.menu-toggle');
@@ -32,67 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Product detail page tabs
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabContents = document.querySelectorAll('.tab-content');
 
-  if (tabBtns.length && tabContents.length) {
-    tabBtns.forEach((btn) => {
-      btn.addEventListener('click', function () {
-        // Remove active class from all tabs
-        tabBtns.forEach((b) => b.classList.remove('active'));
-        tabContents.forEach((c) => c.classList.remove('active'));
-
-        // Add active class to current tab
-        this.classList.add('active');
-        const tabId = this.getAttribute('data-tab');
-        document.getElementById(tabId).classList.add('active');
-      });
-    });
-  }
-
-  // Add to cart functionality
-  const cartButtons = document.querySelectorAll('.cart-button');
-
-  cartButtons.forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.preventDefault();
-
-      // Get product info
-      const productCard = this.closest('.product-card');
-      const productName = productCard.querySelector('h3').textContent;
-
-      // Animation effect
-      button.classList.add('adding');
-
-      // Simulate adding to cart
-      setTimeout(() => {
-        button.classList.remove('adding');
-
-        // Show notification
-        showNotification(`${productName} đã được thêm vào giỏ hàng!`);
-      }, 500);
-    });
-  });
-
-  // Buy now buttons
-  const buyButtons = document.querySelectorAll('.buy-button');
-
-  buyButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const productCard = this.closest('.product-card');
-      const productName = productCard.querySelector('h3').textContent;
-
-      // Animation
-      animateButton(this);
-
-      // Show notification
-      showNotification(`Bạn đang mua sản phẩm: ${productName}`);
-
-      // Redirect to cart (in a real app)
-      // setTimeout(() => window.location.href = 'cart.html', 1000);
-    });
-  });
 
   // CTA button on banner
   const ctaButton = document.querySelector('.cta-button');
@@ -122,6 +90,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       banner.style.backgroundPositionY = `-${translateY}px`;
     });
+  }
+
+  // Load products from Firebase
+  const productGrid = document.querySelector('.product-grid');
+  if (productGrid) {
+    loadProducts(productGrid);
   }
 
   // Function to show notification
@@ -175,6 +149,125 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Add neon glow effect to products on mouse move
+  function addGlowEffectToProducts() {
+    const productCards = document.querySelectorAll('.product-card');
+
+    productCards.forEach(card => {
+      card.addEventListener('mousemove', function (e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        this.style.setProperty('--glow-x', `${x}px`);
+        this.style.setProperty('--glow-y', `${y}px`);
+      });
+    });
+  }
+});
+
+// Function to load products from Firebase
+async function loadProducts(productGrid) {
+  try {
+    // Show loading state
+    productGrid.innerHTML = '<div class="loading-products">Đang tải sản phẩm...</div>';
+
+    // Get products from Firestore
+    const productsQuery = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(8));
+    const querySnapshot = await getDocs(productsQuery);
+
+    // Clear loading
+    productGrid.innerHTML = '';
+
+    if (querySnapshot.empty) {
+      productGrid.innerHTML = '<div class="no-products">Không có sản phẩm nào</div>';
+      return;
+    }
+
+    // Add products to grid
+    querySnapshot.forEach((doc) => {
+      const product = doc.data();
+      const productId = doc.id;
+
+      // Get lowest price from variants
+      let lowestPrice = Infinity;
+      let highestOriginalPrice = 0;
+
+      if (product.variants && product.variants.length > 0) {
+        product.variants.forEach(variant => {
+          if (variant.packages && variant.packages.length > 0) {
+            variant.packages.forEach(pkg => {
+              if (pkg.price < lowestPrice) {
+                lowestPrice = pkg.price;
+              }
+              if (pkg.originalPrice > highestOriginalPrice) {
+                highestOriginalPrice = pkg.originalPrice;
+              }
+            });
+          }
+        });
+      }
+
+      // Fallback to legacy packages structure if variants don't exist
+      if (lowestPrice === Infinity && product.packages && product.packages.length > 0) {
+        product.packages.forEach(pkg => {
+          if (pkg.price < lowestPrice) {
+            lowestPrice = pkg.price;
+          }
+          if (pkg.originalPrice > highestOriginalPrice) {
+            highestOriginalPrice = pkg.originalPrice;
+          }
+        });
+      }
+
+      // Calculate discount
+      const discountPercent = lowestPrice !== Infinity && highestOriginalPrice > 0
+        ? Math.round((1 - lowestPrice / highestOriginalPrice) * 100)
+        : 0;
+
+      const productCard = document.createElement('div');
+      productCard.className = 'product-card';
+      productCard.innerHTML = `
+        <a href="product-detail.html?id=${productId}" class="product-link">
+          <span class="discount-percent">-${discountPercent}%</span>
+          <div class="product-image">
+            ${product.imageUrl
+          ? `<img src="${product.imageUrl}" alt="${product.name}">`
+          : `<div class="placeholder">
+                  <div class="product-category">${product.type}</div>
+                  ${product.name.split(' ').slice(0, 2).join(' ')}
+                </div>`
+        }
+          </div>
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <div class="product-pricing">
+              <div class="current-price">${formatPrice(lowestPrice)}</div>
+              <div class="original-price">${formatPrice(highestOriginalPrice)}</div>
+            </div>
+          </div>
+        </a>
+      `;
+
+      productGrid.appendChild(productCard);
+    });
+
+    // Add glow effect to new products
+    addGlowEffectToProducts();
+
+  } catch (error) {
+    console.error("Error loading products: ", error);
+    productGrid.innerHTML = '<div class="error-loading">Lỗi khi tải sản phẩm</div>';
+  }
+}
+
+// Function to format price
+function formatPrice(price) {
+  if (!price) return '0đ';
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + 'đ';
+}
+
+// Add neon glow effect to products on mouse move
+function addGlowEffectToProducts() {
   const productCards = document.querySelectorAll('.product-card');
 
   productCards.forEach(card => {
@@ -187,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
       this.style.setProperty('--glow-y', `${y}px`);
     });
   });
-});
+}
 
 // Add page transition effects
 window.addEventListener('beforeunload', function () {

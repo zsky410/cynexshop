@@ -56,20 +56,7 @@ body::before,
   animation: ambient-pulse 8s ease-in-out infinite;
 }
 
-/* Force background visibility for cart and guide pages */
-.guide-container,
-.cart-container {
-  background: transparent !important; /* Ensure any background set doesn't override */
-  position: relative !important;
-  z-index: 1 !important; /* Keep content above the background */
-}
-
-/* Make sure no other elements block the background */
-.guide-hero,
-.cart-content {
-  background: transparent !important;
-  position: relative !important;
-}
+/* Background visibility for remaining pages */
 
 /* Override any potential troublesome styles */
 html,
