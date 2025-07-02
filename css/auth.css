@@ -265,88 +265,22 @@ body {
   left: 100%;
 }
 
-.auth-separator {
-  display: flex;
-  align-items: center;
-  margin: 25px 0;
-}
-
-.auth-separator::before,
-.auth-separator::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(89, 118, 255, 0.3);
-}
-
-.auth-separator span {
-  padding: 0 15px;
-  font-size: 14px;
-  color: #bfcfff;
-}
-
-.social-login {
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.social-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.social-btn.google {
-  background: rgba(219, 68, 55, 0.1);
-  color: #db4437;
-  border: 1px solid rgba(219, 68, 55, 0.3);
-}
-
-.social-btn.facebook {
-  background: rgba(66, 103, 178, 0.1);
-  color: #4267b2;
-  border: 1px solid rgba(66, 103, 178, 0.3);
-}
-
-.social-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.social-btn.google:hover {
-  background: rgba(219, 68, 55, 0.2);
-}
-
-.social-btn.facebook:hover {
-  background: rgba(66, 103, 178, 0.2);
-}
-
 .auth-footer {
+  margin-top: 25px;
   text-align: center;
-  font-size: 14px;
 }
 
 .auth-footer span {
-  color: #bfcfff;
+  color: rgba(191, 207, 255, 0.7);
+  margin-right: 5px;
 }
 
 .auth-footer a {
-  color: rgba(89, 118, 255, 0.9);
+  color: var(--accent-color-1);
   text-decoration: none;
-  font-weight: 600;
-  margin-left: 5px;
+  font-weight: 500;
   transition: var(--transition);
+  position: relative;
 }
 
 .auth-footer a:hover {
@@ -357,7 +291,7 @@ body {
 /* Điều chỉnh responsive */
 @media (max-width: 576px) {
   .auth-box {
-    padding: 30px 25px;
+    padding: 25px 20px;
   }
 
   .auth-box h2 {
@@ -365,34 +299,19 @@ body {
   }
 
   .auth-container {
-    padding-top: 80px;
+    padding: 80px 15px 30px;
   }
 
   .input-with-icon input {
     padding: 12px 40px 12px 40px;
   }
-
-  .social-btn {
-    padding: 10px;
-  }
-
-  .social-btn span {
-    display: none;
-  }
-
-  .social-btn i {
-    font-size: 18px;
-  }
 }
 
 /* Điều chỉnh footer để luôn hiển thị ở dưới cùng */
 footer {
-  padding: 20px 0;
   margin-top: auto;
-  background: rgba(7, 16, 35, 0.8);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(89, 118, 255, 0.1);
+  padding: 20px 0;
   text-align: center;
-  position: relative;
-  z-index: 10;
+  font-size: 14px;
+  color: rgba(191, 207, 255, 0.6);
 }

@@ -75,30 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Social login buttons
-  const socialButtons = document.querySelectorAll('.social-btn');
-
-  socialButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      // Add button loading state
-      const originalHTML = this.innerHTML;
-      const type = this.classList.contains('google') ? 'Google' : 'Facebook';
-
-      this.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
-      this.disabled = true;
-
-      // Simulate authentication
-      setTimeout(() => {
-        // Reset button
-        this.innerHTML = originalHTML;
-        this.disabled = false;
-
-        // Show notification
-        showAuthNotification(`${type} authentication initiated!`, 'info');
-      }, 2000);
-    });
-  });
-
   // Function to show styled notifications for auth pages
   function showAuthNotification(message, type = 'success') {
     // Create notification element if it doesn't exist

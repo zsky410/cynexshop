@@ -378,6 +378,7 @@ header .container {
   text-decoration: none;
   color: inherit;
   align-items: center;
+  justify-content: center;
 }
 
 .product-image .product-logo {
@@ -401,6 +402,17 @@ header .container {
   max-height: 100%;
   object-fit: contain;
   padding: 10px;
+}
+
+/* Thêm style cho ảnh sản phẩm */
+.product-image img {
+  width: auto; /* Để ảnh giữ tỷ lệ */
+  height: auto; /* Để ảnh giữ tỷ lệ */
+  max-width: 100%; /* Giới hạn chiều rộng tối đa */
+  max-height: 100%; /* Giới hạn chiều cao tối đa */
+  object-fit: contain; /* Giữ tỷ lệ ảnh */
+  display: block;
+  transition: all 0.3s ease;
 }
 
 /* Ẩn phần logo sản phẩm */

@@ -47,6 +47,8 @@ async function loadProduct(productId) {
 }
 
 function displayProduct(product) {
+  console.log('displayProduct called with:', product);
+
   // Update basic info
   document.getElementById('product-title').textContent = product.name;
   document.getElementById('product-short-desc').textContent = product.shortDescription || '';
@@ -63,6 +65,7 @@ function displayProduct(product) {
   }
 
   // Display variants
+  console.log('About to display variants:', product.variants);
   displayVariants(product.variants || []);
 
   // Update product description content
@@ -105,6 +108,13 @@ function displayVariants(variants) {
   const durationVariants = document.getElementById('duration-variants');
   durationVariants.innerHTML = '<button class="variant-btn disabled">Chọn gói trước</button>';
 
+  // Hide package description initially
+  const packageDescriptionEl = document.getElementById('package-description');
+  const packageDescriptionText = document.getElementById('package-description-text');
+  if (packageDescriptionEl) {
+    packageDescriptionEl.classList.add('hidden');
+  }
+
   // Hide pricing initially
   document.getElementById('pricing-section').style.display = 'none';
 
@@ -122,8 +132,24 @@ function selectVariant(variantIndex) {
     btn.classList.toggle('active', index === variantIndex);
   });
 
-  // Display duration options for selected variant
+  // Display package description
   const variant = currentProduct.variants[variantIndex];
+  const packageDescriptionEl = document.getElementById('package-description');
+  const packageDescriptionText = document.getElementById('package-description-text');
+
+  console.log('Selected variant:', variant);
+  console.log('Variant description:', variant.description);
+
+  if (variant.description && variant.description.trim()) {
+    console.log('Showing package description:', variant.description);
+    packageDescriptionText.textContent = variant.description;
+    packageDescriptionEl.classList.remove('hidden');
+  } else {
+    console.log('Hiding package description - no description found');
+    packageDescriptionEl.classList.add('hidden');
+  }
+
+  // Display duration options for selected variant
   const durationVariants = document.getElementById('duration-variants');
 
   durationVariants.innerHTML = '';
@@ -181,7 +207,6 @@ function formatPrice(price) {
 }
 
 function setupEventListeners() {
-  // No event listeners needed for buttons since we removed them
   console.log('Product detail page initialized');
 }
 
@@ -243,7 +268,7 @@ function showNotification(message, type = 'info') {
   notification.innerHTML = `
     <div style="margin-right: 10px;">${icon}</div>
     <div>${message}</div>
-  `;
+    `;
 
   // Add to container
   container.appendChild(notification);

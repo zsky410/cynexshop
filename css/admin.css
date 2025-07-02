@@ -770,11 +770,12 @@
 
 /* Variant and Package Styles */
 .variant-item {
-  border: 2px solid #e1e5e9;
+  border: 1px solid rgba(89, 118, 255, 0.3);
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
-  background: #f8f9fa;
+  background: rgba(13, 21, 43, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .variant-header {
@@ -784,15 +785,17 @@
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #e1e5e9;
+  border-bottom: 1px solid rgba(89, 118, 255, 0.2);
 }
 
 .variant-name-input,
 .variant-description-input {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(89, 118, 255, 0.3);
   border-radius: 5px;
   font-weight: 500;
+  background: rgba(13, 21, 43, 0.7);
+  color: #fff;
 }
 
 .variant-name-input {
@@ -801,18 +804,19 @@
 }
 
 .remove-variant-btn {
-  background: #dc3545;
-  color: white;
-  border: none;
+  background: rgba(255, 76, 76, 0.2);
+  color: #ff4c4c;
+  border: 1px solid rgba(255, 76, 76, 0.3);
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 12px;
   white-space: nowrap;
+  transition: all 0.3s ease;
 }
 
 .remove-variant-btn:hover {
-  background: #c82333;
+  background: rgba(255, 76, 76, 0.3);
 }
 
 .packages-for-variant {
@@ -821,32 +825,112 @@
 
 .packages-for-variant > label {
   font-weight: 500;
-  color: #666;
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 10px;
   display: block;
 }
 
 .packages-list {
-  background: white;
+  background: rgba(8, 14, 30, 0.6);
   border-radius: 8px;
   padding: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(89, 118, 255, 0.2);
+}
+
+.package-item {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: rgba(13, 21, 43, 0.7);
+  border-radius: 5px;
+  border: 1px solid rgba(89, 118, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+.package-item:hover {
+  background: rgba(13, 21, 43, 0.9);
+  border-color: rgba(89, 118, 255, 0.25);
+}
+
+.package-item:last-child {
+  margin-bottom: 0;
+}
+
+.package-item input {
+  padding: 8px 12px;
+  border: 1px solid rgba(89, 118, 255, 0.3);
+  border-radius: 5px;
+  background: rgba(8, 14, 30, 0.6);
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.package-item input:focus {
+  border-color: rgba(89, 118, 255, 0.6);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(89, 118, 255, 0.15);
+}
+
+.package-item input[name="package-duration[]"] {
+  font-weight: 500;
+  background: rgba(89, 118, 255, 0.1);
+}
+
+.remove-package-btn {
+  background: rgba(255, 76, 76, 0.2);
+  color: #ff4c4c;
+  border: 1px solid rgba(255, 76, 76, 0.3);
+  border-radius: 5px;
+  padding: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove-package-btn:hover {
+  background: rgba(255, 76, 76, 0.3);
 }
 
 .add-package-btn {
   margin-top: 10px;
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
   font-size: 14px;
+  transition: all 0.3s ease;
 }
 
-#add-variant-btn {
-  background: #28a745;
-  border-color: #28a745;
+.add-package-btn:hover {
+  background: rgba(40, 167, 69, 0.3);
+}
+
+#add-variant-btn,
+#edit-add-variant-btn {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
   margin-top: 15px;
+  transition: all 0.3s ease;
 }
 
-#add-variant-btn:hover {
-  background: #218838;
-  border-color: #1e7e34;
+#add-variant-btn:hover,
+#edit-add-variant-btn:hover {
+  background: rgba(40, 167, 69, 0.3);
 }
 
 .product-short-desc {

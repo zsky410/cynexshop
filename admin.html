@@ -18,27 +18,29 @@
     />
     <style>
       .modal {
-        display: flex;
+        display: none;
         position: fixed;
         z-index: 1000;
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.7);
         align-items: center;
         justify-content: center;
+        backdrop-filter: blur(5px);
       }
 
       .modal-content {
         background: rgba(13, 21, 43, 0.95);
         border-radius: 10px;
-        padding: 20px;
+        padding: 25px;
         width: 90%;
-        max-width: 600px;
+        max-width: 800px;
         max-height: 90vh;
         overflow-y: auto;
         border: 1px solid rgba(89, 118, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       }
 
       .modal-header {
@@ -46,19 +48,49 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(89, 118, 255, 0.2);
       }
 
       .modal-header h2 {
         color: #fff;
         margin: 0;
+        font-size: 1.8rem;
       }
 
       .close-btn {
-        background: none;
-        border: none;
-        color: #fff;
+        background: rgba(255, 76, 76, 0.2);
+        border: 1px solid rgba(255, 76, 76, 0.3);
+        color: #ff4c4c;
         font-size: 24px;
         cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 76, 76, 0.3);
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(255, 76, 76, 0.3);
+      }
+
+      .close-btn:after {
+        content: "Đóng";
+        position: absolute;
+        bottom: -25px;
+        font-size: 12px;
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+
+      .close-btn:hover:after {
+        opacity: 1;
       }
 
       .form-group {
@@ -68,7 +100,7 @@
       .form-group label {
         display: block;
         color: #fff;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
         font-weight: 500;
       }
 
@@ -76,12 +108,21 @@
       .form-group textarea,
       .form-group select {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
         border: 1px solid rgba(89, 118, 255, 0.3);
         border-radius: 5px;
         background: rgba(13, 21, 43, 0.7);
         color: #fff;
         font-family: "Montserrat", sans-serif;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: rgba(89, 118, 255, 0.6);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(89, 118, 255, 0.15);
       }
 
       .pricing-section {
@@ -89,6 +130,7 @@
         border-radius: 5px;
         padding: 15px;
         margin: 20px 0;
+        background: rgba(13, 21, 43, 0.7);
       }
 
       .pricing-section h3 {
@@ -126,7 +168,41 @@
         display: flex;
         gap: 10px;
         justify-content: flex-end;
-        margin-top: 20px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(89, 118, 255, 0.2);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #5976ff, #3a3af1);
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(89, 118, 255, 0.3);
+      }
+
+      .btn-secondary {
+        background: rgba(13, 21, 43, 0.7);
+        color: #fff;
+        border: 1px solid rgba(89, 118, 255, 0.3);
+        padding: 12px 24px;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(13, 21, 43, 0.9);
+        border-color: rgba(89, 118, 255, 0.5);
       }
 
       .admin-btn {
@@ -276,6 +352,43 @@
           transform: translateX(0);
           opacity: 1;
         }
+      }
+
+      /* Scrollbar styling */
+      .modal-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .modal-content::-webkit-scrollbar-track {
+        background: rgba(13, 21, 43, 0.5);
+        border-radius: 10px;
+      }
+
+      .modal-content::-webkit-scrollbar-thumb {
+        background: rgba(89, 118, 255, 0.5);
+        border-radius: 10px;
+      }
+
+      .modal-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(89, 118, 255, 0.7);
+      }
+
+      /* Image preview styling */
+      .image-preview {
+        margin-top: 10px;
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+        overflow: hidden;
+        display: none;
+        border: 1px solid rgba(89, 118, 255, 0.3);
+        background: rgba(13, 21, 43, 0.5);
+      }
+
+      .image-preview img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
       }
     </style>
   </head>
@@ -464,6 +577,117 @@
         </div>
       </div>
     </section>
+
+    <!-- Edit Product Modal -->
+    <div id="edit-product-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Chỉnh sửa sản phẩm</h2>
+          <button
+            type="button"
+            class="close-btn"
+            id="close-edit-modal"
+            title="Nhấn để đóng form"
+          >
+            &times;
+          </button>
+        </div>
+        <div
+          class="modal-info"
+          style="
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(89, 118, 255, 0.1);
+            border: 1px solid rgba(89, 118, 255, 0.2);
+            border-radius: 5px;
+          "
+        >
+          <p
+            style="margin: 0; color: rgba(255, 255, 255, 0.8); font-size: 14px"
+          >
+            <i
+              class="fas fa-info-circle"
+              style="color: #5976ff; margin-right: 5px"
+            ></i>
+            Để đóng form này, vui lòng nhấn vào nút <strong>X</strong> ở góc
+            trên bên phải.
+          </p>
+        </div>
+        <form id="edit-product-form">
+          <div class="form-group">
+            <label for="edit-product-name">Tên sản phẩm</label>
+            <input type="text" id="edit-product-name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="edit-product-image">Ảnh sản phẩm</label>
+            <input
+              type="file"
+              id="edit-product-image"
+              name="image"
+              accept="image/*"
+            />
+            <div class="image-preview" id="edit-image-preview"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-product-type">Loại sản phẩm</label>
+            <select id="edit-product-type" name="type" required>
+              <option value="">-- Chọn loại sản phẩm --</option>
+              <option value="NÂNG CẤP CHÍNH CHỦ">Nâng cấp chính chủ</option>
+              <option value="CẤP TÀI KHOẢN">Cấp tài khoản</option>
+              <option value="KEY ACTIVE">Key active</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-product-short-desc">Mô tả ngắn</label>
+            <textarea
+              id="edit-product-short-desc"
+              name="shortDescription"
+              rows="2"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-product-description">Thông tin sản phẩm</label>
+            <textarea
+              id="edit-product-description"
+              name="description"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group packages-container">
+            <label>Các gói sản phẩm và thời hạn</label>
+            <div id="edit-variants-list">
+              <!-- Variants will be loaded here -->
+            </div>
+            <button
+              type="button"
+              id="edit-add-variant-btn"
+              class="btn-secondary"
+            >
+              <i class="fas fa-plus"></i> Thêm gói mới
+            </button>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Cập nhật sản phẩm</button>
+            <button
+              type="button"
+              class="btn-secondary"
+              id="cancel-edit"
+              title="Làm mới form mà không đóng cửa sổ"
+            >
+              Làm mới form
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <footer>
       <div class="container">
