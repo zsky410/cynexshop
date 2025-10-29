@@ -39,7 +39,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           fixed inset-y-0 left-0 z-50
           w-64 bg-gray-50 border-r border-gray-200
           transform transition-transform duration-300 ease-in-out
-          overflow-y-auto
+          overflow-y-auto no-scrollbar
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
@@ -133,20 +133,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               Support
             </h2>
             <nav className="space-y-1">
-              <a
-                href="#"
-                className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-              >
-                <FaDownload className="text-lg" />
-                Download
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-              >
-                <FaTicketAlt className="text-lg" />
-                Lấy mã Netflix
-              </a>
               <a
                 href="#"
                 className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"

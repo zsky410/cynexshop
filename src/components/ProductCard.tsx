@@ -12,6 +12,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
     navigate(`/product/${product.id}`);
   };
 
+  const imageSrc = (() => {
+    const src = product.image ?? product.image_url ?? "";
+    if (!src) return "https://via.placeholder.com/400x200.png?text=Product";
+    if (/^https?:/i.test(src)) return src;
+    return `${import.meta.env.BASE_URL}${src}`;
+  })();
+
+  const primaryPackage = product.offerings?.[0]?.packages?.[0];
+  const displayPrice =
+    product.price ?? product.basePrice ?? primaryPackage?.price ?? 0;
+  const displayOriginalPrice =
+    product.originalPrice ??
+    product.baseOriginalPrice ??
+    primaryPackage?.originalPrice ??
+    undefined;
+
   return (
     <div
       onClick={handleClick}
@@ -20,7 +36,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Image Container */}
       <div className="relative w-full aspect-[2/1] bg-white overflow-hidden">
         <img
-          src={`${import.meta.env.BASE_URL}${product.image}`}
+          src={imageSrc}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
         />
@@ -45,11 +61,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Price */}
         <div className="flex items-baseline gap-2 mt-auto">
           <span className="text-gray-900 font-bold text-lg">
-            {product.price.toLocaleString("vi-VN")}₫
+            {displayPrice.toLocaleString("vi-VN")}₫
           </span>
-          {product.originalPrice && (
+          {displayOriginalPrice && (
             <span className="text-gray-400 line-through text-xs">
-              {product.originalPrice.toLocaleString("vi-VN")}₫
+              {displayOriginalPrice.toLocaleString("vi-VN")}₫
             </span>
           )}
         </div>

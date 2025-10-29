@@ -1,44 +1,87 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
-import { products } from "../data/products";
 import NewHeader from "../components/NewHeader";
 import Sidebar from "../components/Sidebar";
 import Banner from "../components/Banner";
 import ProductSection from "../components/ProductSection";
+import { useProducts } from "../hooks/useProducts";
+import CartSidebar from "../components/CartSidebar";
 
 function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [cartSidebarOpen, setCartSidebarOpen] = useState(false);
+  const { products, newProducts, bestSellerProducts, loading, error } =
+    useProducts();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const bestSellers = products.filter((p) => p.isBestSeller);
-  const newProducts = products.filter((p) => p.isNew);
+  const { section1Products, section2Products } = useMemo(() => {
+    if (products.length === 0) {
+      return {
+        section1Products: [] as typeof products,
+        section2Products: [] as typeof products,
+      };
+    }
 
-  // If no products filtered, use first 4 and last 4
-  const section1Products =
-    bestSellers.length > 0 ? bestSellers : products.slice(0, 4);
-  const section2Products =
-    newProducts.length > 0 ? newProducts : products.slice(4, 8);
+    const bestSellers =
+      bestSellerProducts.length > 0 ? bestSellerProducts : products.slice(0, 4);
+    const newest =
+      newProducts.length > 0
+        ? newProducts
+        : products.slice(bestSellers.length, bestSellers.length + 4);
+
+    return {
+      section1Products: bestSellers,
+      section2Products: newest,
+    };
+  }, [products, bestSellerProducts, newProducts]);
 
   return (
     <div className="flex min-h-screen bg-white">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
+      {/* Global Header - full width */}
+      <div className="fixed inset-x-0 top-0 z-50">
+        <NewHeader
+          onMenuClick={toggleSidebar}
+          onCartClick={() => setCartSidebarOpen(true)}
+        />
+      </div>
+
+      {/* Cart Sidebar */}
+      <CartSidebar
+        isOpen={cartSidebarOpen}
+        onClose={() => setCartSidebarOpen(false)}
+      />
+
       {/* Main Content */}
       <div className="flex-1 flex flex-col lg:ml-64">
-        <NewHeader onMenuClick={toggleSidebar} />
-
-        <main className="flex-1 p-4 lg:p-6">
+        <main className="flex-1 p-4 lg:p-6 pt-20 lg:pt-24">
           <Banner />
 
-          <ProductSection title="Sản phẩm mới" products={section2Products} />
+          <ProductSection
+            title="Sản phẩm mới"
+            products={section2Products}
+            loading={loading}
+            emptyMessage={
+              error
+                ? "Không lấy được dữ liệu sản phẩm."
+                : "Chưa có sản phẩm mới"
+            }
+          />
 
           <ProductSection
             title="Sản phẩm bán chạy"
             products={section1Products}
+            loading={loading}
+            emptyMessage={
+              error
+                ? "Không lấy được dữ liệu sản phẩm."
+                : "Chưa có sản phẩm bán chạy"
+            }
           />
         </main>
       </div>

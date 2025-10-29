@@ -1,19 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import {
-  FaSearch,
-  FaShoppingCart,
-  FaSun,
-  FaBars,
-} from "react-icons/fa";
+import { FaSearch, FaShoppingCart, FaSun, FaBars } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
 
 interface NewHeaderProps {
   onMenuClick: () => void;
+  onCartClick?: () => void;
 }
 
-const NewHeader = ({ onMenuClick }: NewHeaderProps) => {
+const NewHeader = ({ onMenuClick, onCartClick }: NewHeaderProps) => {
   const navigate = useNavigate();
-  const { items, getTotal } = useCart();
+  const { items } = useCart();
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -58,13 +54,7 @@ const NewHeader = ({ onMenuClick }: NewHeaderProps) => {
         <div className="flex items-center gap-2 lg:gap-4">
           {/* Cart */}
           <button
-            onClick={() =>
-              alert(
-                `Giỏ hàng: ${cartItemCount} sản phẩm\nTổng tiền: ${getTotal().toLocaleString(
-                  "vi-VN"
-                )}₫`
-              )
-            }
+            onClick={onCartClick}
             className="relative p-2 rounded-lg hover:bg-gray-100 transition"
           >
             <FaShoppingCart className="text-xl lg:text-2xl text-gray-700" />

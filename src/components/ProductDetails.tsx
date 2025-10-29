@@ -1,5 +1,5 @@
+import { useMemo, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { products } from "../data/products";
 import {
   FaArrowLeft,
   FaShoppingCart,
@@ -10,32 +10,167 @@ import {
   FaArrowUp,
   FaShieldAlt,
 } from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import ProductCard from "./ProductCard";
 import CartSidebar from "./CartSidebar";
-import { useState } from "react";
 import { useCart } from "../context/CartContext";
+import { useProductById, useProducts } from "../hooks/useProducts";
+import type { ProductOffering, ProductPackage } from "../types";
+
+const offeringKey = (offering: ProductOffering, index: number) =>
+  offering.id || offering.type || offering.label || `offering-${index}`;
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const product = products.find((p) => p.id === id);
   const { addToCart, items } = useCart();
+  const { product, loading, error } = useProductById(id);
+  const { products: allProducts } = useProducts();
 
   const [cartSidebarOpen, setCartSidebarOpen] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(
-    product?.options && product.options.length > 0
-      ? product.options[0].id
-      : null
+  const [selectedOfferingKey, setSelectedOfferingKey] = useState<string | null>(
+    null
   );
+  const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
 
-  if (!product) {
+  const computeOfferings = useMemo(() => {
+    if (!product) return [] as ProductOffering[];
+
+    if (product.offerings && product.offerings.length > 0) {
+      return product.offerings;
+    }
+
+    if (product.options && product.options.length > 0) {
+      return [
+        {
+          id: "default",
+          type: product.upgradeMethod ?? "Gói",
+          label: product.upgradeMethod ?? "Gói",
+          packages: product.options.map((option) => ({
+            duration: option.duration || option.label,
+            price: option.price,
+            originalPrice: option.originalPrice,
+          })),
+        },
+      ];
+    }
+
+    return [] as ProductOffering[];
+  }, [product]);
+
+  useEffect(() => {
+    if (computeOfferings.length === 0) {
+      setSelectedOfferingKey(null);
+      setSelectedPackageIndex(0);
+      return;
+    }
+
+    const firstOffering = computeOfferings[0];
+    const key = offeringKey(firstOffering, 0);
+    setSelectedOfferingKey(key);
+    setSelectedPackageIndex(0);
+  }, [computeOfferings]);
+
+  const selectedOffering = useMemo(() => {
+    if (!selectedOfferingKey) return null;
+    return computeOfferings.find((offering, index) => {
+      return offeringKey(offering, index) === selectedOfferingKey;
+    });
+  }, [computeOfferings, selectedOfferingKey]);
+
+  const selectedPackage: ProductPackage | null = useMemo(() => {
+    if (!selectedOffering) return null;
+    return (
+      selectedOffering.packages?.[selectedPackageIndex] ??
+      selectedOffering.packages?.[0] ??
+      null
+    );
+  }, [selectedOffering, selectedPackageIndex]);
+
+  // Get similar products (same category, excluding current product)
+  const similarProducts = useMemo(() => {
+    if (!product) return [];
+    return allProducts
+      .filter(
+        (p) =>
+          p.id !== product.id && p.category && p.category === product.category
+      )
+      .slice(0, 5);
+  }, [allProducts, product]);
+
+  const formatPrice = (price: number) => {
+    return price.toLocaleString("vi-VN") + "₫";
+  };
+
+  const currentPrice = selectedPackage?.price ?? product?.price ?? 0;
+
+  const currentOriginalPrice =
+    selectedPackage?.originalPrice ?? product?.originalPrice ?? undefined;
+
+  const currentDiscount = (() => {
+    if (product?.discountPercentage) return product.discountPercentage;
+    if (currentPrice && currentOriginalPrice) {
+      const diff =
+        100 - Math.round((currentPrice / currentOriginalPrice) * 100);
+      return diff > 0 ? diff : null;
+    }
+    return null;
+  })();
+
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    const selectedLabelParts = [
+      selectedOffering?.label || selectedOffering?.type,
+      selectedPackage?.duration,
+    ].filter(Boolean);
+
+    addToCart({
+      productId: product.id,
+      productName: product.name,
+      productImage:
+        product.image ??
+        product.image_url ??
+        "https://via.placeholder.com/400x200.png?text=Product",
+      optionId:
+        selectedOfferingKey && selectedPackage
+          ? `${selectedOfferingKey}:${selectedPackageIndex}`
+          : undefined,
+      optionLabel:
+        selectedLabelParts.length > 0
+          ? selectedLabelParts.join(" - ")
+          : undefined,
+      price: currentPrice,
+      quantity: 1,
+    });
+
+    // Show notification
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 3000);
+  };
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Sản phẩm không tồn tại
+        <p className="text-gray-500 text-sm">Đang tải thông tin sản phẩm...</p>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Không tìm thấy sản phẩm
           </h1>
+          <p className="text-gray-500 text-sm">
+            {error
+              ? "Đã xảy ra lỗi khi tải dữ liệu."
+              : "Sản phẩm có thể đã bị xóa."}
+          </p>
           <button
             onClick={() => navigate("/")}
             className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
@@ -47,59 +182,14 @@ const ProductDetails = () => {
     );
   }
 
-  // Get similar products (same category, excluding current product)
-  const similarProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 5);
+  const productImage = (() => {
+    const src = product.image ?? product.image_url ?? "";
+    if (!src) return "https://via.placeholder.com/640x360.png?text=Product";
+    if (/^https?:/i.test(src)) return src;
+    return `${import.meta.env.BASE_URL}${src}`;
+  })();
 
-  const formatPrice = (price: number) => {
-    return price.toLocaleString("vi-VN") + "₫";
-  };
-
-  const getCurrentPrice = () => {
-    if (product.options && product.options.length > 0 && selectedOption) {
-      const option = product.options.find((opt) => opt.id === selectedOption);
-      return option ? option.price : product.price;
-    }
-    return product.price;
-  };
-
-  const getCurrentOriginalPrice = () => {
-    if (product.options && product.options.length > 0 && selectedOption) {
-      const option = product.options.find((opt) => opt.id === selectedOption);
-      return option ? option.originalPrice : product.originalPrice;
-    }
-    return product.originalPrice;
-  };
-
-  const getCurrentDiscount = () => {
-    if (product.options && product.options.length > 0 && selectedOption) {
-      const option = product.options.find((opt) => opt.id === selectedOption);
-      return option ? option.discountPercentage : product.discountPercentage;
-    }
-    return product.discountPercentage;
-  };
-
-  const handleAddToCart = () => {
-    const currentPrice = getCurrentPrice();
-    const selectedOptionData = product.options?.find(
-      (opt) => opt.id === selectedOption
-    );
-
-    addToCart({
-      productId: product.id,
-      productName: product.name,
-      productImage: product.image,
-      optionId: selectedOption || undefined,
-      optionLabel: selectedOptionData?.label || selectedOptionData?.duration,
-      price: currentPrice,
-      quantity: 1,
-    });
-
-    // Show notification
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
-  };
+  const availablePackages = selectedOffering?.packages ?? [];
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -145,7 +235,7 @@ const ProductDetails = () => {
               {/* Product Image */}
               <div className="bg-white rounded-xl overflow-hidden border border-gray-200 self-start">
                 <img
-                  src={`${import.meta.env.BASE_URL}${product.image}`}
+                  src={productImage}
                   alt={product.name}
                   className="w-full h-auto"
                   style={{ display: "block" }}
@@ -179,18 +269,18 @@ const ProductDetails = () => {
                 <div className="py-3 border-y">
                   <div className="flex items-baseline gap-3 mb-2">
                     <span className="text-3xl font-bold text-red-600">
-                      {formatPrice(getCurrentPrice())}
+                      {formatPrice(currentPrice)}
                     </span>
-                    {getCurrentOriginalPrice() && (
+                    {currentOriginalPrice && (
                       <span className="text-lg text-gray-400 line-through">
-                        {formatPrice(getCurrentOriginalPrice()!)}
+                        {formatPrice(currentOriginalPrice)}
                       </span>
                     )}
                   </div>
-                  {getCurrentDiscount() && (
+                  {currentDiscount && (
                     <div>
                       <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md">
-                        Giảm {getCurrentDiscount()}%
+                        Giảm {currentDiscount}%
                       </span>
                     </div>
                   )}
@@ -233,27 +323,71 @@ const ProductDetails = () => {
                   )}
                 </div>
 
-                {/* Options Selection */}
-                {product.options && product.options.length > 0 && (
-                  <div className="space-y-2 pt-2">
-                    <h3 className="font-semibold text-gray-900 text-sm">
-                      Chọn thời hạn
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {product.options.map((option) => (
-                        <button
-                          key={option.id}
-                          onClick={() => setSelectedOption(option.id)}
-                          className={`px-4 py-2 rounded-lg font-medium transition-all border-2 text-sm ${
-                            selectedOption === option.id
-                              ? "border-blue-500 bg-blue-500 text-white shadow-md"
-                              : "border-gray-200 bg-white text-gray-700 hover:border-blue-300"
-                          }`}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
+                {/* Offering Selection */}
+                {computeOfferings.length > 0 && (
+                  <div className="space-y-4 pt-2">
+                    {computeOfferings.length > 1 && (
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          Chọn hình thức
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {computeOfferings.map((offering, index) => {
+                            const key = offeringKey(offering, index);
+                            const label =
+                              offering.label ||
+                              offering.type ||
+                              `Gói ${index + 1}`;
+                            return (
+                              <button
+                                key={key}
+                                onClick={() => {
+                                  setSelectedOfferingKey(key);
+                                  setSelectedPackageIndex(0);
+                                }}
+                                className={`px-4 py-2 rounded-lg font-medium transition-all border-2 text-sm ${
+                                  selectedOfferingKey === key
+                                    ? "border-blue-500 bg-blue-500 text-white shadow-md"
+                                    : "border-gray-200 bg-white text-gray-700 hover:border-blue-300"
+                                }`}
+                              >
+                                {label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {availablePackages.length > 0 && (
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          Chọn gói
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {availablePackages.map((pkg, index) => (
+                            <button
+                              key={`${selectedOfferingKey ?? "pkg"}-${index}`}
+                              onClick={() => setSelectedPackageIndex(index)}
+                              className={`px-4 py-2 rounded-lg font-medium transition-all border-2 text-sm ${
+                                selectedPackageIndex === index
+                                  ? "border-blue-500 bg-blue-500 text-white shadow-md"
+                                  : "border-gray-200 bg-white text-gray-700 hover:border-blue-300"
+                              }`}
+                            >
+                              <div className="flex flex-col text-left">
+                                <span>
+                                  {pkg.duration || `Gói ${index + 1}`}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {formatPrice(pkg.price)}
+                                </span>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -285,17 +419,16 @@ const ProductDetails = () => {
               <h3 className="font-bold text-gray-900 text-xl lg:text-2xl">
                 Mô tả sản phẩm
               </h3>
-              <div className="text-gray-600 space-y-4 text-base lg:text-lg">
-                <p>
-                  Tài khoản được cung cấp đầy đủ quyền truy cập và sử dụng không
-                  giới hạn các tính năng premium.
-                </p>
-                <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Cam kết chính hãng, bảo hành trọn đời</li>
-                  <li>Giao tài khoản ngay sau khi thanh toán</li>
-                  <li>Hỗ trợ kỹ thuật 24/7</li>
-                  <li>Đổi trả miễn phí trong 7 ngày</li>
-                </ul>
+              <div className="text-gray-600 space-y-4 text-base lg:text-lg leading-relaxed">
+                {product.descriptionMarkdown || product.description ? (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {product.descriptionMarkdown || product.description || ""}
+                  </ReactMarkdown>
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    Thông tin chi tiết đang được cập nhật.
+                  </p>
+                )}
               </div>
             </div>
 
