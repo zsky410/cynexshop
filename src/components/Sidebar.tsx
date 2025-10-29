@@ -11,8 +11,6 @@ import {
   FaLaptop,
   FaRobot,
   FaShieldAlt,
-  FaDownload,
-  FaTicketAlt,
   FaComments,
   FaFacebook,
 } from "react-icons/fa";
