@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   FaHome,
   FaFilm,
@@ -43,29 +44,19 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-        <div className="p-6">
-          {/* Close button for mobile */}
-          <div className="flex items-center justify-between mb-6 lg:hidden">
-            <h3 className="text-lg font-bold text-gray-900">Menu</h3>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-200 transition"
-            >
-              <FaTimes className="text-xl text-gray-600" />
-            </button>
-          </div>
-
+        <div className="p-6 pt-20">
           <h2 className="text-xs font-semibold text-gray-500 uppercase mb-4">
             Danh mục sản phẩm
           </h2>
           <nav className="space-y-1">
-            <a
-              href="#"
+            <Link
+              to="/"
+              onClick={onClose}
               className="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg font-medium"
             >
               <FaHome className="text-lg" />
               Home
-            </a>
+            </Link>
             <a
               href="#"
               className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"

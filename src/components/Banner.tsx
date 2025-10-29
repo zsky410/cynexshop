@@ -1,7 +1,7 @@
 const Banner = () => {
   return (
     <div className="mb-6 lg:mb-8">
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl lg:rounded-2xl p-6 lg:p-8 text-white">
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl lg:rounded-2xl p-6 lg:p-8 text-white shadow-lg">
         <h2 className="text-2xl lg:text-3xl font-bold mb-2 lg:mb-3">
           Chào mừng đến với CynexShop
         </h2>

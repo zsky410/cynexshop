@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { Product } from "../types/index";
 
 interface ProductCardProps {
@@ -5,12 +6,21 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <div className="bg-white rounded-xl overflow-hidden flex flex-col border border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300 cursor-pointer group">
+    <div
+      onClick={handleClick}
+      className="bg-white rounded-xl overflow-hidden flex flex-col border border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+    >
       {/* Image Container */}
       <div className="relative w-full aspect-[2/1] bg-white overflow-hidden">
         <img
-          src={product.image}
+          src={`${import.meta.env.BASE_URL}${product.image}`}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
         />

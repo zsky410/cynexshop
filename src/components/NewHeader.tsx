@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaShoppingCart,
@@ -5,12 +6,17 @@ import {
   FaUser,
   FaBars,
 } from "react-icons/fa";
+import { useCart } from "../context/CartContext";
 
 interface NewHeaderProps {
   onMenuClick: () => void;
 }
 
 const NewHeader = ({ onMenuClick }: NewHeaderProps) => {
+  const navigate = useNavigate();
+  const { items, getTotal } = useCart();
+  const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="h-16 flex items-center justify-between px-4 lg:px-6">
@@ -23,13 +29,16 @@ const NewHeader = ({ onMenuClick }: NewHeaderProps) => {
         </button>
 
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+        >
           <img
-            src="assets/logo/logo_full.png"
+            src={`${import.meta.env.BASE_URL}assets/logo/logo_full.png`}
             alt="CynexShop Logo"
-            className="h-10 object-contain"
+            className="h-6 sm:h-8 object-contain"
           />
-        </div>
+        </button>
 
         {/* Search Bar */}
         <div className="flex-1 max-w-xl mx-4 lg:mx-8">
@@ -49,21 +58,27 @@ const NewHeader = ({ onMenuClick }: NewHeaderProps) => {
         {/* Right Actions */}
         <div className="flex items-center gap-2 lg:gap-4">
           {/* Cart */}
-          <button className="relative p-2 rounded-lg hover:bg-gray-100 transition">
+          <button
+            onClick={() =>
+              alert(
+                `Giỏ hàng: ${cartItemCount} sản phẩm\nTổng tiền: ${getTotal().toLocaleString(
+                  "vi-VN"
+                )}₫`
+              )
+            }
+            className="relative p-2 rounded-lg hover:bg-gray-100 transition"
+          >
             <FaShoppingCart className="text-xl lg:text-2xl text-gray-700" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-              2
-            </span>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                {cartItemCount}
+              </span>
+            )}
           </button>
 
           {/* Theme Toggle - hidden on mobile */}
           <button className="hidden md:block p-2 rounded-lg hover:bg-gray-100 transition">
             <FaSun className="text-xl lg:text-2xl text-gray-700" />
-          </button>
-
-          {/* User */}
-          <button className="p-2 rounded-lg hover:bg-gray-100 transition">
-            <FaUser className="text-xl lg:text-2xl text-gray-700" />
           </button>
         </div>
       </div>
