@@ -15,7 +15,6 @@ import {
   FaTicketAlt,
   FaComments,
   FaFacebook,
-  FaTimes,
 } from "react-icons/fa";
 
 interface SidebarProps {

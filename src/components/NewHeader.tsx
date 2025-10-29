@@ -3,7 +3,6 @@ import {
   FaSearch,
   FaShoppingCart,
   FaSun,
-  FaUser,
   FaBars,
 } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
