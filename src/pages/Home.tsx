@@ -24,14 +24,9 @@ function Home() {
         section2Products: [] as typeof products,
       };
     }
-
-    const bestSellers =
-      bestSellerProducts.length > 0 ? bestSellerProducts : products.slice(0, 4);
-    const newest =
-      newProducts.length > 0
-        ? newProducts
-        : products.slice(bestSellers.length, bestSellers.length + 4);
-
+    // Chỉ lấy đúng các sản phẩm đã gán flag
+    const bestSellers = bestSellerProducts;
+    const newest = newProducts;
     return {
       section1Products: bestSellers,
       section2Products: newest,

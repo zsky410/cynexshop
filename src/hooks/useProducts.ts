@@ -175,10 +175,7 @@ export const useProducts = () => {
     }
 
     const newProducts = products.filter((product) => product.isNew);
-    const bestSellerProducts = products
-      .slice()
-      .sort((a, b) => (b.sold ?? 0) - (a.sold ?? 0))
-      .slice(0, 8);
+    const bestSellerProducts = products.filter((product) => product.isBestSeller);
 
     return { products, newProducts, bestSellerProducts };
   }, [products]);
